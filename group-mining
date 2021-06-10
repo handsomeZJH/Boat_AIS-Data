@@ -1,0 +1,53 @@
+import os
+import numpy as np
+def get_file_name_list(file_dir):
+    '''
+    :brief:获取文件夹下内，所有文件
+    :param file_dir:文件夹目录
+    :return: 文件列表
+    '''
+    for root,dirs,files in os.walk(file_dir):
+        return files
+filename_list = get_file_name_list('D:\编程\软基自写python\Boat_AIS\data_set')
+nn=1
+num=0
+path_out = ('abnormal/bridge4.22.txt')  # 新的txt文件
+t = ''
+with open(path_out, 'w+') as f_out:
+    for path in filename_list:
+        print(nn,path)
+        f = open('data_set/' + path)  # 打开txt文件
+        line = f.readline()  # 以行的形式进行读取文件
+        list1 = []
+        list2 = []
+        while line:
+            a = line.split()
+            b = a[3:5]  # 这是选取需要读取的列
+            c = a[:]
+            list1.append(b)  # 将其添加在列表之中
+            list2.append(c)
+            line = f.readline()
+        f.close()
+        for i in range(len(list1)):
+            list1[i][0] = float(list1[i][0])
+            list1[i][1] = float(list1[i][1])
+        list1 = np.array(list1)
+        list2 = np.array(list2)
+        for i in range(len(list2)):
+            # print(list2[i][3],list2[i][4])
+            if (float(list2[i][3]) > 114.282) & (float(list2[i][3]) < 114.2930) & (
+                    float(list2[i][4]) > 30.543) & (float(list2[i][4]) < 30.556):
+                num = num + 1
+                #print(list2[i])
+                for j in list2[i]:
+                    t = t + j + str('   ')
+                f_out.write(t)
+                f_out.write('\n')
+                t = ''
+
+                break
+        nn = nn + 1
+
+
+print(num)
+#print(list0)
